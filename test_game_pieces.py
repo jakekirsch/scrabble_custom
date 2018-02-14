@@ -8,7 +8,7 @@ SCRABBLE_LETTER_VALUES = {
 # Test Game Rules
 def test_gameRulesBaseline():
 	rules = game_pieces.gameRules()
-	if rules.getLetterValues() == SCRABBLE_LETTER_VALUES:
+	if rules.get_letter_values() == SCRABBLE_LETTER_VALUES:
 		print("SUCCESS: gameRulesBaseline()")
 	else:
 		print("FAILURE: gameRulesBaseline()")
@@ -108,10 +108,12 @@ def test_print():
 
 
 
+print("--------------GAME RULES---------------------------")
 print("---------------------------------------------------")
 print("testing gameRulesBaseline()")
 test_gameRulesBaseline()
 
+print("--------------LETTERS------------------------------")
 print("---------------------------------------------------")
 print("testing letter()")
 test_letter()
@@ -141,5 +143,12 @@ print("---------------------------------------------------")
 print("testing test_print()")
 test_print()
 
+
+
+print("--------------LETTER BAG---------------------------")
 print("---------------------------------------------------")
+
+
+
+
 print("FINISHED")
