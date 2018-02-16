@@ -15,17 +15,31 @@ If you're feeling frustrated or stuck - throw [this on](https://www.youtube.com/
 
 
 ##### Log
-Working on `class bag`, need to finish writing the removal piece and then
-start making some unit tests. I'm not sure making a `letter` (i.e. tiles) class is necessary, might be over-engineered since the information of a tile sits within the game_rules and the tiles themselves don't change value state. Although that would be interesting in the future...maybe as time goes on you can change the value of tiles?? 
 
+2018.02.16 
+- Wrote two small posts on list comprehension and some string functions!
+- 
 
+2018.02.15 
+- No progress
 
+2018.02.14 
+- Almost wrapped up creating all the physical pieces to the game, thinking through how to represent `board` - seems like list of lists of list would work, for a 2D or 3D board. But what about an n-dimensional game? Maybe in the next iteration. That would require `numpy`
 
+2018.02.13 
+- Working on `class bag`, need to finish writing the removal piece and then start making some unit tests. I'm not sure making a `letter` (i.e. tiles) class is necessary, might be over-engineered since the information of a tile sits within the game_rules and the tiles themselves don't change value state. Although that would be interesting in the future...maybe as time goes on you can change the value of tiles?? 
 
 
 
 ##### Learnings
 *group these once there are three of a kind*
+
+##### Other
+- creating a user written exception
+- list to dictionary and dictionary to list
+- problem of randomly generating a set of tiles from a bag
+- run a simulation to test the randint pull from a bag?
+- list of list of list vs ndarray
 
 ##### Virtual Env
 [How to create a virtualenv with the right version](https://packaging.python.org/guides/installing-using-pip-and-virtualenv/)
@@ -52,3 +66,12 @@ How to initialize a new git repo in your [project](https://help.github.com/artic
 		`git remote -v`
 7. push the changes in local repository to github, which means the github repository will have the same state as local repository
 		`git push -u origin master`
+
+
+##### Pelican and Publishing
+1. Start in project root directory, run `pelican content` to run pelican on content directory
+2. `cd output` and run `python -m pelican.server` and visit `localhost:8000` to view site updates locally
+3. `cd` back to project root directory, run `pelican -s publishconf.py content` which uses the `-s` settings defined in `publishconf.py` to generate output in the `content` path.
+4. `ghp-import output -b master` will use the `ghp-import` module to import `output` directory to branch master
+5. `git push origin master` pushes updates to `origin` from `master`, which hopefully is your github repo
+6. fin
