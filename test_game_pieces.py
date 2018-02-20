@@ -42,6 +42,13 @@ def test_get_board_dimension():
 	else:
 		print("Test 2: FAILURE")
 
+def test_get_board_center():
+	'''Unit test for retrieving board center'''
+	rules = game_pieces.gameRules()
+
+	print(rules.get_board_center())
+
+
 
 #TEST LETTER CLASS------------------------------------------------------------------------
 def test_letter():
@@ -452,25 +459,6 @@ def test_get_dimensions():
 	else:
 		print("Test 1: FAILURE")
 
-def test_get_board():
-	'''Unit test for returning the 3D array, using lists'''
-	rules = game_pieces.gameRules()
-	board = game_pieces.board(rules)
-
-	try:
-		if board.get_board() == TEST_DEFAULT_BOARD:
-			print("Test 2: SUCCESS")
-		else:
-			print("Test 2: FAILURE")
-	except:
-		print("COME BACK AND FIX THIS")
-
-def test_print_board():
-	'''Unit test for returning the 3D array, using lists'''
-	rules = game_pieces.gameRules()
-	board = game_pieces.board(rules)
-
-	print(board)
 
 def test_is_valid_location():
 	'''Unit test for returning the 3D array, using lists'''
@@ -612,7 +600,7 @@ def test_pretty_print_board():
 	location_one = (3,1,1)
 	location_two = (3,2,1)
 	location_three = (1,3,1)
-	location_four = (1,4,1)
+	location_four = (10,10,1)
 
 	letter_a = game_pieces.letter(rules, 'a', owner = 1)
 	letter_b = game_pieces.letter(rules, 'b', owner = 2)
@@ -624,7 +612,38 @@ def test_pretty_print_board():
 	board.add_letter(letter_c, location_three)
 	board.add_letter(letter_d, location_four)
 
-	print(board.pretty_print_board())
+	board.pretty_print_board()
+
+
+
+def test_words_from_board():
+	'''Unit test for retrieving the word from the board'''
+	rules = game_pieces.gameRules()
+	board = game_pieces.board(rules)
+	board = copy.deepcopy(board)
+
+	# Test 1
+	location_one = (5,5,1)
+	location_two = (6,5,1)
+	location_three = (7,5,1)
+	location_four = (8,5,1)
+	location_five = (4,5,1)
+
+	letter_a = game_pieces.letter(rules, 'h', owner = 1)
+	letter_b = game_pieces.letter(rules, 'e', owner = 2)
+	letter_c = game_pieces.letter(rules, 'l', owner = 1)
+	letter_d = game_pieces.letter(rules, 'l', owner = 2)
+	letter_e = game_pieces.letter(rules, 'o', owner = 2)
+
+	board.add_letter(letter_a, location_five)
+	board.add_letter(letter_b, location_one)
+	board.add_letter(letter_c, location_two)
+	board.add_letter(letter_d, location_three)
+	board.add_letter(letter_e, location_four)
+
+	board.pretty_print_board()
+	board.words_from_board()
+
 #TESTS------------------------------------------------------------------------
 
 print("--------------GAME RULES---------------------------")
@@ -639,6 +658,10 @@ test_get_letter_dist()
 print("---------------------------------------------------")
 print("testing get_board_dimension()")
 test_get_board_dimension()
+
+print("---------------------------------------------------")
+print("testing get_board_center()")
+test_get_board_center()
 
 print("--------------LETTERS------------------------------")
 print("---------------------------------------------------")
@@ -722,17 +745,11 @@ print("---------------------------------------------------")
 print("testing board()")
 test_board()
 
-print("---------------------------------------------------")
-print("testing get_board()")
-test_get_board()
 
 print("---------------------------------------------------")
 print("testing get_dimensions()")
 test_get_dimensions()
 
-print("---------------------------------------------------")
-print("testing print_board()")
-test_print_board()
 
 print("---------------------------------------------------")
 print("testing is_valid_location()")
@@ -750,7 +767,12 @@ print("---------------------------------------------------")
 print("testing pretty_print_board()")
 test_pretty_print_board()
 
+print("---------------------------------------------------")
+print("testing words_from_board()")
+test_words_from_board()
+
 
 print("FINISHED")
 
 
+#

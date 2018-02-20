@@ -11,7 +11,7 @@ import string
 import random
 import numpy
 import helper_functions
-
+import math
 
 class gameRules(object):
 	"""
@@ -51,6 +51,15 @@ class gameRules(object):
 			board_dimension, a tuple of form (int, int, int)'''
 		return self.board_dimension
 
+	def get_board_center(self):
+		'''Returns the center of the board, i.e. where 
+		it should start.
+
+		Parameters - none
+		Return - center: a 3 tuple of integers'''
+		dims = self.get_board_dimension()
+		center = (math.ceil(dims[0]/2), math.ceil(dims[1]/2), math.ceil(dims[2]/2))
+		return center
 
 	# def setLetterValues(self, dictionary):
 	# 	'''update letter values dict'''
@@ -286,14 +295,15 @@ class board(object):
 		'''
 		self.dimensions = game_rules.get_board_dimension()		
 		self.letter_positions = letter_positions
+		self.center = game_rules.get_board_center()
 
 	def get_dimensions(self):
 		'''Returns a tuple of the board game dimensions'''
 		return self.dimensions
 
-	def get_board(self):
-		'''Returns the board'''
-		return(self.board)
+	def get_center(self):
+		'''Returns a tuple of the board game center'''
+		return self.center
 	
 	def get_letter_positions(self):
 		'''Returns the letter_positions dictionary'''
@@ -391,13 +401,66 @@ class board(object):
                 for row in level]) 
                 for level in board]))
 		
-		return(pretty_arrange)
+		print(pretty_arrange)
 		
 
 	def __str__(self):
 		'''overload print() for practice'''
 		return(self.pretty_print_board())
 
+	def words_from_board(self):
+		'''Retrieves the words from the board game'''
+
+		# start at center of board - need to determine
+		center = self.get_center()
+
+		# search queue - FIFO
+		x_queue = [center]
+		y_queue = []
+		z_queue = []
+
+		# searched entries
+		x_searched = []
+		y_searched = []
+		z_searched = []
+
+
+
+		for x in x_queue: # find the 'start' and 'end' points
+			start = x
+			end = x
+			word = None
+			
+			print("searching", x)
+			
+			if x in x_searched:
+				print(x, "already searched")
+			else:
+				x_searched.append(x)
+				print("x searched", x_searched)
+				
+				if(self.is_location_empty(x)):
+					print(x, "is empty, done")
+				
+				else:
+					# determine neighbors
+					x_neighbors = [tuple(map(lambda i,j: i + j, x, (1, 0, 0))),
+					tuple(map(lambda i,j: i - j, x, (1, 0, 0)))]
+					x_neighbors_valid = [x for x in x_neighbors if self.is_valid_location(x)] 
+				
+					for x_n in x_neighbors_valid:
+						
+					y_neighbors = [tuple(map(lambda i,j: i + j, x, (0, 1, 0))),
+					tuple(map(lambda i,j: i - j, x, (0, 1, 0)))]
+					y_neighbors_valid = [y for y in y_neighbors if self.is_valid_location(y)] 
+
+					x_queue.extend(x_neighbors_valid)
+					y_queue.extend(y_neighbors_valid)
+					print("x_queue", x_queue)
+					print("y_queue", y_queue)
+		
+		# if empty, done
+		# check right from that location, check left
 
 class gamePieceError(Exception):
     """Base class for exceptions in game_piece Module."""
