@@ -616,34 +616,88 @@ def test_pretty_print_board():
 
 
 
-def test_words_from_board():
+def test_create_two_letter_word_graph():
 	'''Unit test for retrieving the word from the board'''
 	rules = game_pieces.gameRules()
 	board = game_pieces.board(rules)
 	board = copy.deepcopy(board)
 
-	# Test 1
-	location_one = (5,5,1)
-	location_two = (6,5,1)
-	location_three = (7,5,1)
-	location_four = (8,5,1)
-	location_five = (4,5,1)
+	board.add_letter(game_pieces.letter(rules, 'h', owner = 1), (4,5,1))
+	board.add_letter(game_pieces.letter(rules, 'e', owner = 2), (5,5,1))
+	board.add_letter(game_pieces.letter(rules, 'l', owner = 1), (6,5,1))
+	board.add_letter(game_pieces.letter(rules, 'l', owner = 2), (7,5,1))
+	board.add_letter(game_pieces.letter(rules, 'o', owner = 2), (8,5,1))
+	board.add_letter(game_pieces.letter(rules, 'n', owner = 1), (3,9,1))
+	board.add_letter(game_pieces.letter(rules, 'o', owner = 1), (4,9,1))
+	board.add_letter(game_pieces.letter(rules, 'o', owner = 2), (3,8,1))
+	board.add_letter(game_pieces.letter(rules, 'e', owner = 1), (3,10,1))
 
-	letter_a = game_pieces.letter(rules, 'h', owner = 1)
-	letter_b = game_pieces.letter(rules, 'e', owner = 2)
-	letter_c = game_pieces.letter(rules, 'l', owner = 1)
-	letter_d = game_pieces.letter(rules, 'l', owner = 2)
-	letter_e = game_pieces.letter(rules, 'o', owner = 2)
+	# board.pretty_print_board()
+	test_results = board.create_two_letter_word_graph(delta = (1,0,0))
+	
 
-	board.add_letter(letter_a, location_five)
-	board.add_letter(letter_b, location_one)
-	board.add_letter(letter_c, location_two)
-	board.add_letter(letter_d, location_three)
-	board.add_letter(letter_e, location_four)
+	if test_results == {(5, 5, 1): [(4, 5, 1), (6, 5, 1)], (4, 5, 1): [(5, 5, 1)], (6, 5, 1): [(5, 5, 1), (7, 5, 1)], (7, 5, 1): [(6, 5, 1), (8, 5, 1)], (8, 5, 1): [(7, 5, 1)], (4, 9, 1): [(3, 9, 1)], (3, 9, 1): [(4, 9, 1)]}:
+		print("Test 1: SUCCESS")
+	else:
+		print("Test 1: FAILURE")
 
-	board.pretty_print_board()
-	board.words_from_board()
+	test_results_y = board.create_two_letter_word_graph(delta = (0, 1, 0))
 
+	if test_results_y == {(3, 8, 1): [(3, 9, 1)], (3, 10, 1): [(3, 9, 1)], (3, 9, 1): [(3, 8, 1), (3, 10, 1)]}:
+		print("Test 2: SUCCESS")
+	else:
+		print("Test 2: FAILURE")
+
+def test_words_from_board():
+	'''Unit test for words from board'''
+	rules = game_pieces.gameRules()
+	board = game_pieces.board(rules)
+	board = copy.deepcopy(board)
+
+	board.add_letter(game_pieces.letter(rules, 'h', owner = 1), (4,5,1))
+	board.add_letter(game_pieces.letter(rules, 'e', owner = 2), (5,5,1))
+	board.add_letter(game_pieces.letter(rules, 'l', owner = 1), (6,5,1))
+	board.add_letter(game_pieces.letter(rules, 'l', owner = 2), (7,5,1))
+	board.add_letter(game_pieces.letter(rules, 'o', owner = 2), (8,5,1))
+	board.add_letter(game_pieces.letter(rules, 'n', owner = 1), (3,9,1))
+	board.add_letter(game_pieces.letter(rules, 'o', owner = 1), (4,9,1))
+	board.add_letter(game_pieces.letter(rules, 'o', owner = 2), (3,8,1))
+	board.add_letter(game_pieces.letter(rules, 'e', owner = 1), (3,10,1))
+
+	results = board.words_from_board()
+
+	if results == {((4, 5, 1), (8, 5, 1)): [(4, 5, 1), (5, 5, 1), (6, 5, 1), (7, 5, 1), (8, 5, 1)], ((3, 9, 1), (4, 9, 1)): [(3, 9, 1), (4, 9, 1)], ((3, 8, 1), (3, 10, 1)): [(3, 8, 1), (3, 9, 1), (3, 10, 1)]}:
+		print("Test 1: SUCCESS")
+	else:
+		print("Test 1: FAILURE")
+
+
+def test_is_word_location_valid():
+	'''Unit test for is word location valid'''
+	rules = game_pieces.gameRules()
+	board = game_pieces.board(rules)
+	board = copy.deepcopy(board)
+
+	board.add_letter(game_pieces.letter(rules, 'h', owner = 1), (4,5,1))
+	board.add_letter(game_pieces.letter(rules, 'e', owner = 2), (5,5,1))
+	board.add_letter(game_pieces.letter(rules, 'l', owner = 1), (6,5,1))
+	board.add_letter(game_pieces.letter(rules, 'l', owner = 2), (7,5,1))
+	board.add_letter(game_pieces.letter(rules, 'o', owner = 2), (8,5,1))
+	board.add_letter(game_pieces.letter(rules, 'n', owner = 1), (3,9,1))
+	board.add_letter(game_pieces.letter(rules, 'o', owner = 1), (4,9,1))
+	board.add_letter(game_pieces.letter(rules, 'o', owner = 2), (3,8,1))
+	board.add_letter(game_pieces.letter(rules, 'e', owner = 1), (3,10,1))
+
+	new_letter = game_pieces.letter(rules, 'h', owner = 1)
+	new_location = (4, 6, 1)
+
+	new_letter_2 = game_pieces.letter(rules, 'j', owner = 1)
+	new_location_2 = (4, 5, 1)
+	
+	word_loc_dict = {new_location: new_letter,
+					 new_location_2: new_letter_2}
+
+	board.is_word_location_valid(word_loc_dict)
 #TESTS------------------------------------------------------------------------
 
 print("--------------GAME RULES---------------------------")
@@ -768,8 +822,16 @@ print("testing pretty_print_board()")
 test_pretty_print_board()
 
 print("---------------------------------------------------")
+print("testing create_two_letter_word_graph()")
+test_create_two_letter_word_graph()
+
+print("---------------------------------------------------")
 print("testing words_from_board()")
 test_words_from_board()
+
+print("---------------------------------------------------")
+print("testing is_word_location_valid()")
+test_is_word_location_valid()
 
 
 print("FINISHED")

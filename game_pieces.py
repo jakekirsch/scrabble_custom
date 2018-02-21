@@ -409,58 +409,88 @@ class board(object):
 		return(self.pretty_print_board())
 
 	def words_from_board(self):
-		'''Retrieves the words from the board game'''
+		'''Retrieves the words from the board game as a dictionary of 
+		x and y words
+		'''
 
-		# start at center of board - need to determine
-		center = self.get_center()
-
-		# search queue - FIFO
-		x_queue = [center]
-		y_queue = []
-		z_queue = []
-
-		# searched entries
-		x_searched = []
-		y_searched = []
-		z_searched = []
-
-
-
-		for x in x_queue: # find the 'start' and 'end' points
-			start = x
-			end = x
-			word = None
-			
-			print("searching", x)
-			
-			if x in x_searched:
-				print(x, "already searched")
-			else:
-				x_searched.append(x)
-				print("x searched", x_searched)
-				
-				if(self.is_location_empty(x)):
-					print(x, "is empty, done")
-				
-				else:
-					# determine neighbors
-					x_neighbors = [tuple(map(lambda i,j: i + j, x, (1, 0, 0))),
-					tuple(map(lambda i,j: i - j, x, (1, 0, 0)))]
-					x_neighbors_valid = [x for x in x_neighbors if self.is_valid_location(x)] 
-				
-					for x_n in x_neighbors_valid:
-						
-					y_neighbors = [tuple(map(lambda i,j: i + j, x, (0, 1, 0))),
-					tuple(map(lambda i,j: i - j, x, (0, 1, 0)))]
-					y_neighbors_valid = [y for y in y_neighbors if self.is_valid_location(y)] 
-
-					x_queue.extend(x_neighbors_valid)
-					y_queue.extend(y_neighbors_valid)
-					print("x_queue", x_queue)
-					print("y_queue", y_queue)
+		x_graph = self.create_two_letter_word_graph(delta = (1, 0, 0))
+		y_graph = self.create_two_letter_word_graph(delta = (0, 1, 0))
 		
-		# if empty, done
-		# check right from that location, check left
+		x_results = {} # set as dictionary
+		for h in x_graph.keys():
+		    x_results[h] = helper_functions.find_edges(x_graph, h)
+		
+		y_results = {} 
+		for i in y_graph.keys():
+			y_results[i] = helper_functions.find_edges(y_graph, i)
+
+		x_words = {}
+		for key, value in x_results.items():
+		    x_words[(min(value), max(value))] = sorted(value)
+
+		y_words = {}
+		for key, value in y_results.items():
+			y_words[(min(value), max(value))] = sorted(value)
+		
+		for key, value in y_words.items():
+			x_words[key] = sorted(value)
+
+		return x_words
+
+	def create_two_letter_word_graph(self, delta = (1, 0, 0)):
+		'''Generates the graph of letters and their neighbors, as
+		defined by delta
+
+		Parameters:
+			delta - a tuple of form (x, y, z) where x, y, z are integers. 
+				(1, 0, 0) will return the graph where neighbors are 1 location
+				greater and less along the x axis. (0, 1, 0) returns the same along
+				the y axis
+		Returns
+			pair_dict - a dictionary where each key is the letter location tuple, 
+			value is the list of location tuples that are within reach as defined 
+			by delta'''
+
+		# get the letter positions dictionary
+		letter_positions = self.get_letter_positions()
+
+		# turn letter position dictionary into a list of tuples pairs which 
+		# represents all two letter "words" - i.e. lettes that are side by side
+		pair_iterable = [(key, k) for k,v in letter_positions.items() 
+                   for key, value in letter_positions.items() if helper_functions.tuple_diff(key, k) == delta]
+
+      	# Here, convert the list of pairs of tuples to a dictionary, 
+      	# where key is a tuple and value is a list of all tuples
+		# that are 'neighbors'
+		pair_dict = {}
+		for key, value in pair_iterable:
+		    if key in pair_dict:
+		        pair_dict[key] = pair_dict[key] + [value]
+		    else:
+		        pair_dict[key] = [value]
+		return pair_dict
+
+	# play word - decompose to several
+	def is_word_location_valid(self, word_loc_dict):
+		'''determines if the word_loc_dict is a valid play based on 
+		common scrabble criteria, such as 
+		1. all in the same axis (x, y, z)
+		2. no 'gaps' in play
+		3. all spots are empty
+
+		Parameters:
+			word_loc_dict - a dictionary of form {(location), (letter)}
+				where location is a tuple of form (x, y, z)
+			letter - an object of type letter
+		Returns:
+			Boolean - T/F if the word location is valid'''
+		
+		# all spots are empty and on board
+		test = all([(self.is_location_empty(k) and self.is_valid_location(k)) for k in word_loc_dict.keys()])
+		
+		
+		print("Spots are empty and on board", test)
+		
 
 class gamePieceError(Exception):
     """Base class for exceptions in game_piece Module."""

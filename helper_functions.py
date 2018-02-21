@@ -48,6 +48,25 @@ def dict_to_list(letter_dict):
 			letter_list.append(key)
 	return letter_list
 
+# helper function to calculate "difference" between tuples.
+def tuple_diff(x, y):
+    return tuple(map(lambda i,j: abs(i - j), x, y))
+
+def find_edges(graph, start, nodes = []):
+	'''Takes a graph, start node and optional list of nodes
+	Parameters:
+		graph - a dictionary with keys as a tuple representing location 
+			of node and a list of tuples representing the nodes that can be reached
+		start - a start node from graph
+		nodes - a list of the node tuples that can be reached from start tuple
+	Output:
+		a list of nodes (tuples) that can be reached from the start node'''
+	nodes = nodes + [start]
+	for node in graph[start]:
+		if node not in nodes: 
+			nodes = find_edges(graph,node,nodes)
+	return nodes    
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'

@@ -17,8 +17,8 @@ If you're feeling frustrated or stuck - throw [this on](https://www.youtube.com/
 ##### Log
 
 2018.02.16 
-- Wrote two small posts on list comprehension and some string functions!
-- 
+- Wrote two small posts on list comprehension and some string functions, updated blog
+- working on implementing those in representation of game board
 
 2018.02.15 
 - No progress
@@ -49,6 +49,9 @@ If you're feeling frustrated or stuck - throw [this on](https://www.youtube.com/
 Activate and deactivate a virtualenv
 	`source envname/bin/activate`
 	`deactivate`
+
+How to check what packages are installed
+1. `pip list`
 
 
 ##### Git
